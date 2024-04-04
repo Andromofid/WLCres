@@ -1,5 +1,5 @@
 <?php
-require("./connexiondb.php");
+require("../connexiondb.php");
 if (isset($_POST['done'])) {
     extract($_POST);
     $sql = $db->prepare("SELECT * FROM Admin WHERE Email = ? AND Pass = ?");
@@ -7,9 +7,8 @@ if (isset($_POST['done'])) {
     $user = $sql->fetch();
     if (!empty($user)) {
         session_start();
-        $_SESSION["Exist"]=true;
+        $_SESSION["Data"] = $user;
         header("location:index.php");
-        
     } else {
         $error = "";
     }
@@ -180,14 +179,16 @@ if (isset($_POST['done'])) {
 
 <body class="">
     <nav class="w-100 d-flex justify-content-between align-items-center bg-danger" style="padding: 5px 0;">
-        <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">Eat.ma</a>
+        <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">
+            <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" width="150px" alt="">
+        </a>
     </nav>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-light" style="height: 100vh;">
-                <p class="fs-3 text-danger ">Eat.ma</p>
-                <p class="text-dark fs-6">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Soluta, quod.</p>
+                <img src="https://www.eat.ma/wp-content/uploads/eat-logo-red-small.png" width="300px" alt="" class="py-3">
+                <p class="text-dark fs-6 text-center">Bonjour dans votre espace d'admin ,commence d'jaouter des restaurants .
             </div>
             <div class="col-sm-12 col-md-6 form-body d-flex justify-content-center align-items-center m-auto " style="height: 100vh;">
 
@@ -202,7 +203,7 @@ if (isset($_POST['done'])) {
                                 <?php
                                 if (isset($error)) {
                                 ?><p class="alert alert-danger ">incorrect email or password</p><?php } ?>
-                                <form action="#" method="post" class="requires-validation "  enctype="multipart/form-data">
+                                <form action="#" method="post" class="requires-validation " enctype="multipart/form-data">
                                     <div class="col-md-12">
                                         <input class="form-control my-3" type="email" name="Email" placeholder="Email" required>
                                     </div>

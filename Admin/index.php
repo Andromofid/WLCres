@@ -1,7 +1,7 @@
 <?php
-require("./connexiondb.php");
+require("../connexiondb.php");
 session_start();
-if (!isset($_SESSION["Exist"])) {
+if (!isset($_SESSION["Data"])) {
     header("location:login.php");
 }
 ?>
@@ -170,7 +170,9 @@ if (!isset($_SESSION["Exist"])) {
 
 <body class="">
     <nav class="w-100 d-flex justify-content-between align-items-center bg-danger" style="padding: 5px 0;">
-        <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">Eat.ma</a>
+        <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">
+            <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" alt="" width="150px">
+        </a>
 
 
     </nav>
@@ -178,7 +180,7 @@ if (!isset($_SESSION["Exist"])) {
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-light" style="height: 100vh;">
-                <p class="fs-3 text-danger ">Eat.ma</p>
+            <img src="https://www.eat.ma/wp-content/uploads/eat-logo-red-small.png" width="300px" alt="" class="py-3">
                 <p class="text-dark fs-6">Bonjour dans votre espace d'admin ,commence d'jaouter des restaurants .
                     <form action="traitement.php" method="post">
                         <button type="submit" class="btn btn-danger btn-sm" name="exit">quitter l'espace d'admin</button>
@@ -216,11 +218,11 @@ if (!isset($_SESSION["Exist"])) {
                                     </div>
 
                                     <div class="col-md-12">
-                                        <input class="form-control my-3" type="number" name="Latitude" placeholder="Latitude" required>
+                                        <input class="form-control my-3" type="text" name="Latitude" placeholder="Latitude" required>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <input class="form-control" type="number" name="Longitude" placeholder="Longitude" required>
+                                        <input class="form-control" type="text" name="Longitude" placeholder="Longitude" required>
                                     </div>
                                     <div class="form-button mt-3">
                                         <button id="submit" type="submit" class="btn btn-danger " name="done">Ajouter</button>
