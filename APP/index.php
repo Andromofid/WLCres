@@ -69,6 +69,12 @@ if (isset($_GET["Ville"])) {
         .selectize-input {
             width: 210px;
         }
+                #country {
+            width: 210px !important;
+            height: 35px;
+            border: 1px solid #ddd;
+            padding-left: 10px;
+        }
 
         #country {
             width: 210px !important;
