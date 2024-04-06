@@ -25,7 +25,7 @@ if (isset($_GET["Ville"])) {
 } else {
 
     $error = "<h1 class='text-center'>404 <br/> PAGE NOT FOUND</h1>";
-    // echo ($error);
+    header("location:./Search.php");
 }
 ?>
 
@@ -38,9 +38,6 @@ if (isset($_GET["Ville"])) {
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.min.css" integrity="sha512-wCrId7bUEl7j1H60Jcn4imkkiIYRcoyq5Gcu3bpKAZYBJXHVMmkL4rhtyhelxSFuPMIoQjiVsanrHxcs2euu/w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -51,6 +48,9 @@ if (isset($_GET["Ville"])) {
             top: 100px;
             transition: 0.5s;
 
+        }
+        .container1{
+            margin-top: 70px !important;
         }
 
         .info {
@@ -64,6 +64,17 @@ if (isset($_GET["Ville"])) {
 
         .content {
             z-index: 1;
+        }
+
+        .selectize-control.single .selectize-input.input-active,
+        .selectize-input {
+            width: 210px;
+            height: 35px;
+            overflow-y: hidden;
+        }
+
+        .icon {
+            width: 15px;
         }
 
         #country {
@@ -83,21 +94,42 @@ if (isset($_GET["Ville"])) {
             #map {
                 display: none;
             }
+
+            .container1 {
+                margin-top: 100px !important;
+            }
+
+            .form {
+                width: 100%;
+                flex-direction: column;
+                align-items: center !important;
+            }
+
+            .selectize-control.single .selectize-input.input-active,
+            .selectize-input {
+                width: 300px;
+
+            }
+
+            .button {
+                width: 50%;
+            }
         }
     </style>
     </style>
 </head>
 
 <body>
-    <nav class="navbar bg-body-tertiary position-fixed w-100">
+
+    <nav class="navbar bg-body-tertiary position-fixed" style="width: 100%;">
         <div class="container-fluid">
-            <form action="#" method="post" class="d-flex gap-5" role="search">
+            <form action="" method="post" class="form d-flex gap-5 align-items-end " role="search">
                 <div class="row g-3 align-items-center">
                     <div class="col-auto">
                         <label for="quoi" class="col-form-label">Quoi ?</label>
                     </div>
                     <div class="col-auto">
-                        <select class="country" id="country" name="Specialite"  >
+                        <select class="country" id="country" name="Specialite">
                             <?php foreach ($Specialites as $Specialite) {
                                 if ($_POST['Specialite'] == $Specialite['Specialites']) { ?>
                                     <option value="<?= $Specialite['Specialites'] ?>" selected><?= $Specialite['Specialites'] ?></option>
@@ -127,19 +159,24 @@ if (isset($_GET["Ville"])) {
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-primary fs-6 btn-sm" type="submit">chercher</button>
+                <button class="btn btn-danger button my-1 text-center" type="submit">
+                    <svg class="icon  text-center " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                    </svg>
+                </button>
             </form>
         </div>
     </nav>
+
     <!-- hero section -->
     <?php if (isset($error)) { ?>
         <div class=" d-flex align-items-center justify-content-center w-100" style="height: 100vh;">
             <?php echo ($error) ?>
         </div>
     <?php } else { ?>
-        <div class="container my-5 ">
+        <div class="container mt-5 container1">
             <div>
-                <h1 class="fw-semibold"><span class="header">Les restos</span> à Paris</h1>
+                <h1 class="fw-semibold"><span class="header">Les restos</span> <span class="text-danger "><?= $_GET["Ville"] ?></span></h1>
                 <p class="paragraphe">Envie de nouveaux goûts ? Découvre les restaurants à proximité.</p>
             </div>
             <div class="row h-100  content">
@@ -149,7 +186,7 @@ if (isset($_GET["Ville"])) {
                     foreach ($restaurants as $restaurant) {
                         $image = "data:" . $restaurant["Type_Photo"] . ";base64," . base64_encode($restaurant["Photo_Res"]);
                         $place = $restaurant['Nom_Res'];
-                        $replaced = str_replace(' ', '+', $place);
+                        // $replaced = str_replace(' ', '+', $place);
                     ?>
                         <!-- card start -->
                         <div class="card mb-3 " style="max-width: 540px;">
@@ -162,6 +199,7 @@ if (isset($_GET["Ville"])) {
                                         <h5 class="card-title">
                                             <?= $restaurant['Nom_Res'] ?>
                                         </h5>
+                                        <p class=" card-text text-danger "><?= $restaurant['Specialites'] ?></p>
                                         <p class=" card-text"><?= $restaurant['Cartier'] ?></p>
                                         <p class="header"><?= $restaurant['Ville'] ?></p>
 
@@ -201,10 +239,10 @@ if (isset($_GET["Ville"])) {
     <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 
     <script>
-      $(function () {
-        $(".country").selectize();
-      });
-      window.onscroll = () => {
+        $(function() {
+            $(".country").selectize();
+        });
+        window.onscroll = () => {
             var vmap = document.getElementById("map");
             if (window.scrollY >= 650) {
                 vmap.style.transform = "translateY(-400px)";
