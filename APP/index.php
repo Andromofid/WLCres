@@ -65,6 +65,10 @@ if (isset($_GET["Ville"])) {
         .content {
             z-index: 1;
         }
+                .selectize-control.single .selectize-input.input-active,
+        .selectize-input {
+            width: 210px;
+        }
 
         #country {
             width: 210px !important;
