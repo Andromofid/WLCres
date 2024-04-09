@@ -24,7 +24,7 @@ $restaurants = $sql->fetchAll();
       <!-- card start -->
       <div class="col-3">
         <div class="card text-bg-dark">
-          <img src="../images/Marrakech.jpg" class="card-img" alt="<?= $restaurant['Ville'] ?>">
+          <img src="../images/<?=$restaurant['Ville']?>.jpg" class="card-img" alt="<?= $restaurant['Ville'] ?>">
           <div class="d-flex justify-content-center align-items-center card-img-overlay">
             <h5 class="card-title"><?= $restaurant['Ville'] ?></h5>
             <a href="./index.php?Ville=<?= $restaurant['Ville'] ?>" class="stretched-link"></a>

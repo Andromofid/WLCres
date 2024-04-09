@@ -6,8 +6,7 @@ if (isset($_GET["Ville"])) {
     $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ?");
     $sql->execute([$Ville]);
     $restaurants = $sql->fetchAll();
-
-    // Touts les Villes
+    // Touts lesVilles
     $sql = $db->prepare("SELECT DISTINCT Ville FROM restaurant  ");
     $sql->execute([]);
     $Villes = $sql->fetchAll();
@@ -15,16 +14,18 @@ if (isset($_GET["Ville"])) {
     $sql = $db->prepare("SELECT DISTINCT Specialites FROM restaurant WHERE Ville = ?");
     $sql->execute([$Ville]);
     $Specialites = $sql->fetchAll();
-    if (isset($_POST["Ville"])) {
+    // Touts Quartier de ville
+    $sql = $db->prepare("SELECT DISTINCT Cartier FROM restaurant WHERE Ville = ?");
+    $sql->execute([$Ville]);
+    $Cartiers = $sql->fetchAll();
+    if (isset($_POST["Specialite"])) {
         extract($_POST);
         // Les reatau par Ville et Specialite
-        $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ? AND Specialites =? ");
-        $sql->execute([$Ville, $Specialite]);
+        $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ? AND Specialites =? AND Cartier LIKE'%$Cartier%' ");
+        $sql->execute([$_GET['Ville'], $Specialite]);
         $restaurants = $sql->fetchAll();
     }
 } else {
-
-    $error = "<h1 class='text-center'>404 <br/> PAGE NOT FOUND</h1>";
     header("location:./Search.php");
 }
 ?>
@@ -49,9 +50,7 @@ if (isset($_GET["Ville"])) {
             transition: 0.5s;
 
         }
-        .container1{
-            margin-top: 70px !important;
-        }
+
 
         .info {
             width: 200px;
@@ -65,11 +64,13 @@ if (isset($_GET["Ville"])) {
         .content {
             z-index: 1;
         }
-                .selectize-control.single .selectize-input.input-active,
+
+        .selectize-control.single .selectize-input.input-active,
         .selectize-input {
             width: 210px;
         }
-                #country {
+
+        #select {
             width: 210px !important;
             height: 35px;
             border: 1px solid #ddd;
@@ -87,7 +88,7 @@ if (isset($_GET["Ville"])) {
             width: 15px;
         }
 
-        #country {
+        #select {
             width: 210px !important;
             height: 35px;
             border: 1px solid #ddd;
@@ -105,11 +106,9 @@ if (isset($_GET["Ville"])) {
                 display: none;
             }
 
-            .container1 {
-                margin-top: 100px !important;
-            }
 
-            .form {
+            .form-content,
+            .select-content {
                 width: 100%;
                 flex-direction: column;
                 align-items: center !important;
@@ -122,7 +121,7 @@ if (isset($_GET["Ville"])) {
             }
 
             .button {
-                width: 50%;
+                width: 150px;
             }
         }
     </style>
@@ -131,15 +130,14 @@ if (isset($_GET["Ville"])) {
 
 <body>
 
-    <nav class="navbar bg-body-tertiary position-fixed" style="width: 100%;">
-        <div class="container-fluid">
-            <form action="" method="post" class="form d-flex gap-5 align-items-end " role="search">
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="quoi" class="col-form-label">Quoi ?</label>
-                    </div>
-                    <div class="col-auto">
-                        <select class="country" id="country" name="Specialite">
+    <nav class="navbar bg-body-tertiary " style="width: 100%;">
+
+        <div class="d-flex justify-content-around w-100 form-content">
+            <form action="index.php?Ville=<?= $_GET['Ville'] ?>" method="post" class="form d-flex  " role="search">
+                <div class="d-flex select-content align-items-end ">
+                    <div class="">
+                        Specialite:
+                        <select class="select" id="select" name="Specialite">
                             <?php foreach ($Specialites as $Specialite) {
                                 if ($_POST['Specialite'] == $Specialite['Specialites']) { ?>
                                     <option value="<?= $Specialite['Specialites'] ?>" selected><?= $Specialite['Specialites'] ?></option>
@@ -150,45 +148,54 @@ if (isset($_GET["Ville"])) {
                             } ?>
                         </select>
                     </div>
+                    <div class="">
+                        Quartier:
+                        <select class="select" id="select" name="Cartier">
+                            <option value="" selected></option>
+                            <?php foreach ($Cartiers as $Cartier) { ?>
+                                <option value="<?= $Cartier['Cartier'] ?>"><?= $Cartier['Cartier'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="my-1 mx-2">
+                        <button class="btn btn-primary button m-auto">Search</button>
+                    </div>
                 </div>
                 <!-- box 2 -->
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="ou" class="col-form-label">Où ?</label>
-                    </div>
-                    <div class="col-auto">
-                        <select class="country" id="country" name="Ville">
+            </form>
+
+            <form action="" method="get" class="form d-flex " role="search">
+                <div class="d-flex select-content align-items-end">
+                    <div class="">
+                        Ville:
+                        <select class="select" id="select" name="Ville">
                             <?php foreach ($Villes as $Ville) {
-                                if ($_GET["Ville"] == $Ville) {
+                                if ($_GET["Ville"] == $Ville["Ville"]) {
                             ?>
-                                    <option value="<?= $_GET['Ville'] ?>" selected><?= $_GET['Ville'] ?></option>
+                                    <option value="<?= $Ville['Ville'] ?>" selected><?= $Ville['Ville'] ?></option>
                                 <?php } else { ?>
-                                    <option value="<?= $_GET['Ville'] ?>"><?= $_GET['Ville'] ?></option>
+                                    <option value="<?= $Ville['Ville'] ?>"><?= $Ville['Ville'] ?></option>
                             <?php }
                             } ?>
                         </select>
                     </div>
+                    <div class="my-1 mx-2">
+                        <button class="btn btn-danger  button m-auto">Changer la ville</button>
+                    </div>
                 </div>
-                <button class="btn btn-danger button my-1 text-center" type="submit">
-                    <svg class="icon  text-center " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
-                </button>
             </form>
         </div>
+
     </nav>
 
     <!-- hero section -->
-    <?php if (isset($error)) { ?>
-        <div class=" d-flex align-items-center justify-content-center w-100" style="height: 100vh;">
-            <?php echo ($error) ?>
+
+    <div class="container  container1">
+        <div>
+            <h1 class="fw-semibold"><span class="header">Les restos</span> <span class="text-danger "><?= $_GET["Ville"] ?></span></h1>
+            <p class="paragraphe">Envie de nouveaux goûts ? Découvre les restaurants à proximité.</p>
         </div>
-    <?php } else { ?>
-        <div class="container mt-5 container1">
-            <div>
-                <h1 class="fw-semibold"><span class="header">Les restos</span> <span class="text-danger "><?= $_GET["Ville"] ?></span></h1>
-                <p class="paragraphe">Envie de nouveaux goûts ? Découvre les restaurants à proximité.</p>
-            </div>
+        <?php if (!empty($restaurants)) { ?>
             <div class="row h-100  content">
                 <!-- restaurant -->
                 <div class="col-sm-10 col-md-6 restaurant">
@@ -232,25 +239,26 @@ if (isset($_GET["Ville"])) {
                 </div>
 
             </div>
-        </div>
-    <?php } ?>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
-    <h1>+++</h1>
+        <?php } else { ?>
+            <div class="row h-100  content">
+                <!-- restaurant -->
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    Aucun restaurant
+                </div>
+                <div id="map" class=" col-md-6 bg-light ">
+                    <!-- <a href="https://www.maptiler.com"><img src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo" /></a> -->
+                </div>
+
+            </div>
+        <?php } ?>
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 
     <script>
         $(function() {
-            $(".country").selectize();
+            $(".select").selectize();
         });
         window.onscroll = () => {
             var vmap = document.getElementById("map");
