@@ -25,8 +25,7 @@ if (isset($_GET["Ville"])) {
         $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ? AND Specialites =? AND Cartier LIKE'%$Cartier%' ");
         $sql->execute([$_GET['Ville'], $Specialite]);
         $restaurants = $sql->fetchAll();
-    }
-    else if (isset($_POST["Nom"])) {
+    } else if (isset($_POST["Nom"])) {
         extract($_POST);
         // Les reatau par Ville et Specialite
         $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ? AND Nom_Res LIKE'%$nom%' ");
@@ -47,9 +46,16 @@ if (isset($_GET["Ville"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.min.css" integrity="sha512-wCrId7bUEl7j1H60Jcn4imkkiIYRcoyq5Gcu3bpKAZYBJXHVMmkL4rhtyhelxSFuPMIoQjiVsanrHxcs2euu/w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.min.css" integrity="sha512-wCrId7bUEl7j1H60Jcn4imkkiIYRcoyq5Gcu3bpKAZYBJXHVMmkL4rhtyhelxSFuPMIoQjiVsanrHxcs2euu/w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/css/tom-select.min.css" integrity="sha512-fnaIKCc5zGOLlOvY3QDkgHHDiDdb4GyMqn99gIRfN6G6NrgPCvZ8tNLMCPYgfHM3i3WeAU6u4Taf8Cuo0Y0IyQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.3.1/js/tom-select.complete.min.js" integrity="sha512-zdXqksVc9s0d2eoJGdQ2cEhS4mb62qJueasTG4HjCT9J8f9x5gXCQGSdeilD+C7RqvUi1b4DdD5XaGjJZSlP9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
     <style>
         #map {
             border-radius: 20px;
@@ -74,20 +80,17 @@ if (isset($_GET["Ville"])) {
             z-index: 1;
         }
 
-        .selectize-control.single .selectize-input.input-active,
-        .selectize-input {
-            width: 210px;
-        }
 
-        #select {
+        #select,
+        .form-select,
+        .sel {
             width: 210px !important;
             height: 35px;
             border: 1px solid #ddd;
             padding-left: 10px;
         }
 
-        .selectize-control.single .selectize-input.input-active,
-        .selectize-input {
+        .ts-control,.S2 {
             width: 210px;
             height: 35px;
             overflow-y: hidden;
@@ -123,14 +126,10 @@ if (isset($_GET["Ville"])) {
                 align-items: center !important;
             }
 
-            .selectize-control.single .selectize-input.input-active,
-            .selectize-input {
-                width: 300px;
-
-            }
 
             .button {
                 width: 150px;
+                margin-top: 15px !important;
             }
         }
     </style>
@@ -143,11 +142,12 @@ if (isset($_GET["Ville"])) {
         <div class="d-flex justify-content-around w-100 form-content">
             <form action="index.php?Ville=<?= $_GET['Ville'] ?>" method="post" class="form d-flex  " role="search">
                 <div class="d-flex select-content align-items-end ">
-                    <div class="">
+                    <div class="" style="width: 210px;">
                         Specialite:
-                        <select class="select" id="select" name="Specialite">
+                        <select class="S1" id="select1" name="Specialite" style="width: 200px;height: 35px;overflow-y: hidden;">
                             <?php foreach ($Specialites as $Specialite) {
                                 if ($_POST['Specialite'] == $Specialite['Specialites']) { ?>
+                                    <!-- <option value=""></option> -->
                                     <option value="<?= $Specialite['Specialites'] ?>" selected><?= $Specialite['Specialites'] ?></option>
                                 <?php } else { ?>
                                     <option value="<?= $Specialite['Specialites'] ?>"><?= $Specialite['Specialites'] ?></option>
@@ -156,17 +156,16 @@ if (isset($_GET["Ville"])) {
                             } ?>
                         </select>
                     </div>
-                    <div class="">
+                    <div class="ms-md-3">
                         Quartier:
-                        <select class="select" id="select" name="Cartier">
-                            <option value="" selected></option>
+                        <select class="form-control S2" id="select" name="Cartier">
                             <?php foreach ($Cartiers as $Cartier) { ?>
                                 <option value="<?= $Cartier['Cartier'] ?>"><?= $Cartier['Cartier'] ?></option>
                             <?php } ?>
                         </select>
                     </div>
                     <div class="my-1 mx-2">
-                        <button class="btn btn-primary button m-auto">Search</button>
+                        <button class="btn btn-primary btn-sm button m-auto">Search</button>
                     </div>
                 </div>
                 <!-- box 2 -->
@@ -176,7 +175,7 @@ if (isset($_GET["Ville"])) {
                 <div class="d-flex select-content align-items-end">
                     <div class="">
                         Ville:
-                        <select class="select" id="select" name="Ville">
+                        <select class="form-control" id="select" name="Ville">
                             <?php foreach ($Villes as $Ville) {
                                 if ($_GET["Ville"] == $Ville["Ville"]) {
                             ?>
@@ -188,14 +187,14 @@ if (isset($_GET["Ville"])) {
                         </select>
                     </div>
                     <div class="my-1 mx-2">
-                        <button class="btn btn-danger  button m-auto">Changer la ville</button>
+                        <button class="btn btn-danger btn-sm  button m-auto">Changer la ville</button>
                     </div>
                 </div>
             </form>
         </div>
 
     </nav>
- 
+
     <!-- hero section -->
 
     <div class="container  container1">
@@ -259,16 +258,58 @@ if (isset($_GET["Ville"])) {
 
             </div>
         <?php } ?>
+        <select class="select" name="" id="">
+            <?php foreach ($Cartiers as $Cartier) { ?>
+                <option value="<?= $Cartier['Cartier'] ?>"><?= $Cartier['Cartier'] ?></option>
+            <?php } ?>
+        </select>
+
     </div>
 
-    
     <!-- script -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        new TomSelect("#select1");
+    </script>
     <script>
         $(function() {
-            $(".select").selectize();
+
+
+            var select2 = $("#select");
+
+            $('#select1').change(function() {
+                var selectedValue = $(this).val();
+                // alert(selectedValue);
+                $.ajax({
+                    type: "POST",
+                    url: "test.php",
+                    data: {
+                        Specialite: selectedValue,
+                        Ville: encodeURIComponent('<?= $_GET['Ville'] ?>'),
+                    },
+                    success: function(response) {
+                        // Log the modified value to the console
+                        var res = JSON.parse(response);
+                        select2.empty();
+
+                        res.forEach(element => {
+                            select2.append($('<option>', {
+                                value: element.Cartier,
+                                text: element.Cartier
+                            }));
+                            console.log(element);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+            // $(".select").selectize();
+
         });
+
         window.onscroll = () => {
             var vmap = document.getElementById("map");
             if (window.scrollY >= 650) {
@@ -284,8 +325,8 @@ if (isset($_GET["Ville"])) {
         //starting position
         var greenIcon = L.icon({
             iconUrl: 'https://cdn-icons-png.flaticon.com/512/8280/8280802.png',
-            iconSize:     [40, 40], // point from which the popup should open relative to the iconAnchor
-            iconAnchor:   [20, 20],
+            iconSize: [40, 40], // point from which the popup should open relative to the iconAnchor
+            iconAnchor: [20, 20],
         });
         const map = L.map("map").setView(
             [
@@ -296,13 +337,16 @@ if (isset($_GET["Ville"])) {
             [
                 <?php echo $restaurants[0]['C_Latitude']; ?>,
                 <?php echo $restaurants[0]['C_Longitude']; ?>
-            ],{icon: greenIcon}).addTo(map);
-            marker.bindPopup('<?php echo "<div class=" . "info" . "><h3>" . $restaurants[0]['Nom_Res'] . "</h3><p>" . $restaurants[0]['Ville'] . "</p><p class=\"text-danger\">" . $restaurants[0]['Specialites'] . "</p></div>"; ?>')
+            ], {
+                icon: greenIcon
+            }).addTo(map);
+        marker.bindPopup('<?php echo "<div class=" . "info" . "><h3>" . $restaurants[0]['Nom_Res'] . "</h3><p>" . $restaurants[0]['Ville'] . "</p><p class=\"text-danger\">" . $restaurants[0]['Specialites'] . "</p></div>"; ?>')
         <?php foreach ($restaurants as $res) : ?>
-            var marker<?php echo $res['IdRes']; ?> = L.marker([<?php echo $res['C_Latitude']; ?>, <?php echo $res['C_Longitude']; ?>],{icon: greenIcon}).addTo(map);
+            var marker<?php echo $res['IdRes']; ?> = L.marker([<?php echo $res['C_Latitude']; ?>, <?php echo $res['C_Longitude']; ?>], {
+                icon: greenIcon
+            }).addTo(map);
             marker<?php echo $res['IdRes']; ?>.bindPopup('<?php echo "<div class=" . "info" . "><h3>" . $res['Nom_Res'] . "</h3><p>" . $res['Ville'] . "</p><p class=\"text-danger\">" . $res['Specialites'] . "</p></div>"; ?>');
         <?php endforeach; ?>
-
         L.tileLayer(
             "https://api.maptiler.com/maps/topo-v2/256/{z}/{x}/{y}.png?key=IAKoattdnMh2FDr00Ydx", {
                 //style URL
