@@ -169,13 +169,24 @@ if (!isset($_SESSION["Data"])) {
 
 
 <body class="">
-    <nav class="w-100 d-flex justify-content-between align-items-center bg-danger" style="padding: 5px 0;">
-        <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">
-            <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" alt="" width="150px">
-        </a>
-
-
-    </nav>
+<nav class="navbar navbar-expand-lg bg-danger">
+    <div class="container-fluid">
+      <a href="https://www.eat.ma/" class="link-dark px-2 fs-4"><img class="w-50" src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" alt="eat"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-light" href="index.php">Ajouter restaurants</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="offres.php">Ajouter offres</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
     <div class="container-fluid">
         <div class="row">

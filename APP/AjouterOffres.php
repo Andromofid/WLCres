@@ -1,5 +1,5 @@
 <?php
-require("./connexiondb.php");
+require("../connexiondb.php");
 $sql = $db->prepare("SELECT * from restaurant");
 $sql->execute([]);
 $restaurants = $sql->fetchAll();
@@ -7,13 +7,12 @@ if (isset($_POST['done'])) {
     extract($_POST);
     $fileimg = $_FILES["Photo"];
     $nameimg = $fileimg["name"];
-    $typeimg = $fileimg["type"];
     $pathtmpimgsrc = $fileimg["tmp_name"];
-    $pathimgdest = "images/Offres/$nameimg";
-    var_dump($_POST);
-    $sql = $db->prepare("INSERT INTO offres (IdRes,Des,statue,NomImg,TypeImg)Values(?,?,?,?,?)");
-    $sql->execute([$Res,$Des,$Statue,$nameimg,$typeimg]);
+    $pathimgdest = "../images/Offres/$nameimg";
+    $sql = $db->prepare("INSERT INTO offres (IdRes,Des,statue,NomImg)Values(?,?,?,?)");
+    $sql->execute([$Res,$Des,$Statue,$nameimg]);
     move_uploaded_file($pathtmpimgsrc, $pathimgdest);
+    header("location:../index.php?done=Demande Envoyer");
 
 }
 ?>

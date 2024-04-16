@@ -14,6 +14,16 @@ $restaurants = $sql->fetchAll();
   <link rel="stylesheet" href="../css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <style>
+    .alert{
+      position: fixed;
+      bottom: 5px;
+      right: 10px;
+      width: 400px;
+
+      
+    }
+  </style>
 </head>
 
 <body>
@@ -32,7 +42,7 @@ $restaurants = $sql->fetchAll();
           <a class="nav-link text-dark " aria-current="page" href="index.php">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="AjouterOffres.php">Ajouter un Offres</a>
+          <a class="nav-link text-dark" href="./APP/AjouterOffres.php">Ajouter un Offres</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="#">Contact</a>
@@ -64,6 +74,15 @@ $restaurants = $sql->fetchAll();
       }
       ?>
     </div>
+  </div>
+  <div class="w-100">
+
+      <?php 
+      if(isset($_GET['done'])){
+      ?>
+        <div class="alert alert-success"><?=$_GET['done']?></div>
+      <?php }?>
+
   </div>
 </body>
 
