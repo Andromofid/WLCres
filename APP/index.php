@@ -6,6 +6,7 @@ if (isset($_GET["Ville"])) {
     $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ?");
     $sql->execute([$Ville]);
     $restaurants = $sql->fetchAll();
+
     // Touts lesVilles
     $sql = $db->prepare("SELECT DISTINCT Ville FROM restaurant  ");
     $sql->execute([]);
@@ -25,6 +26,14 @@ if (isset($_GET["Ville"])) {
         $sql->execute([$_GET['Ville'], $Specialite]);
         $restaurants = $sql->fetchAll();
     }
+    else if (isset($_POST["Nom"])) {
+        extract($_POST);
+        // Les reatau par Ville et Specialite
+        $sql = $db->prepare("SELECT * FROM restaurant WHERE Ville = ? AND Nom_Res LIKE'%$nom%' ");
+        $sql->execute([$_GET['Ville'], $nom]);
+        $restaurants = $sql->fetchAll();
+    }
+    // var_dump($restaurants);
 } else {
     header("location:./Search.php");
 }
@@ -125,12 +134,11 @@ if (isset($_GET["Ville"])) {
             }
         }
     </style>
-    </style>
 </head>
 
 <body>
-
-    <nav class="navbar bg-body-tertiary " style="width: 100%;">
+    <nav class="bg-danger w-100 mb-3"><img src="../images/eatLogo.png" alt="" width="100px"></nav>
+    <nav class="navbar " style="width: 100%;">
 
         <div class="d-flex justify-content-around w-100 form-content">
             <form action="index.php?Ville=<?= $_GET['Ville'] ?>" method="post" class="form d-flex  " role="search">
@@ -187,7 +195,7 @@ if (isset($_GET["Ville"])) {
         </div>
 
     </nav>
-
+ 
     <!-- hero section -->
 
     <div class="container  container1">
@@ -252,10 +260,11 @@ if (isset($_GET["Ville"])) {
             </div>
         <?php } ?>
     </div>
+
+    
+    <!-- script -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
-
     <script>
         $(function() {
             $(".select").selectize();
@@ -273,6 +282,11 @@ if (isset($_GET["Ville"])) {
 
         }
         //starting position
+        var greenIcon = L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/8280/8280802.png',
+            iconSize:     [40, 40], // point from which the popup should open relative to the iconAnchor
+            iconAnchor:   [20, 20],
+        });
         const map = L.map("map").setView(
             [
                 <?php echo $restaurants[0]['C_Latitude']; ?>,
@@ -282,10 +296,10 @@ if (isset($_GET["Ville"])) {
             [
                 <?php echo $restaurants[0]['C_Latitude']; ?>,
                 <?php echo $restaurants[0]['C_Longitude']; ?>
-            ]).addTo(map);
-
+            ],{icon: greenIcon}).addTo(map);
+            marker.bindPopup('<?php echo "<div class=" . "info" . "><h3>" . $restaurants[0]['Nom_Res'] . "</h3><p>" . $restaurants[0]['Ville'] . "</p><p class=\"text-danger\">" . $restaurants[0]['Specialites'] . "</p></div>"; ?>')
         <?php foreach ($restaurants as $res) : ?>
-            var marker<?php echo $res['IdRes']; ?> = L.marker([<?php echo $res['C_Latitude']; ?>, <?php echo $res['C_Longitude']; ?>]).addTo(map);
+            var marker<?php echo $res['IdRes']; ?> = L.marker([<?php echo $res['C_Latitude']; ?>, <?php echo $res['C_Longitude']; ?>],{icon: greenIcon}).addTo(map);
             marker<?php echo $res['IdRes']; ?>.bindPopup('<?php echo "<div class=" . "info" . "><h3>" . $res['Nom_Res'] . "</h3><p>" . $res['Ville'] . "</p><p class=\"text-danger\">" . $res['Specialites'] . "</p></div>"; ?>');
         <?php endforeach; ?>
 

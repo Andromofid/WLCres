@@ -174,8 +174,8 @@ if (!isset($_SESSION["Data"])) {
             <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" alt="" width="150px">
         </a>
 
-
     </nav>
+
 
     <div class="container-fluid">
         <div class="row">
@@ -188,50 +188,24 @@ if (!isset($_SESSION["Data"])) {
                 </p>
             </div>
             <div class="col-sm-12 col-md-6 form-body d-flex justify-content-center align-items-center m-auto " style="height: 100vh;">
-
-                <div class="d-flex justify-content-center align-items-center ">
-
-                    <div class="form-holder ">
-                        <div class="form-content m-auto">
-                            <div class="form-items ">
-                                <h3 class="">Ajouter un restaurant</h3>
-                                <p class="">
-                                    Remplissez les données ci-dessous.</p>
-                                <form action="traitement.php" method="post" enctype="multipart/form-data">
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" name="Nom" placeholder="Nom de restaurant" required>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" name="Ville" placeholder="Ville" required>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" name="Cartier" placeholder="Cartier" required>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" name="Specialites" placeholder="Specialites" required>
-                                    </div>
-
-                                    <div class="col-md-12 my-3">
-                                        <label for="" class="text-dark">Photo de restaurant:</label>
-                                        <input class="form-control" type="file" accept="image/*" name="Photo" required>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <input class="form-control my-3" type="text" name="Latitude" placeholder="Latitude" required>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <input class="form-control" type="text" name="Longitude" placeholder="Longitude" required>
-                                    </div>
-                                    <div class="form-button mt-3">
-                                        <button id="submit" type="submit" class="btn btn-danger " name="done">Ajouter</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                <div class="list-group w-75  text-center ">
+                    <a
+                        href="#"
+                        class="list-group-item list-group-item-action list-group-item-light"
+                        >Ajouter un restaurant</a
+                    >
+                    <a
+                        href="#"
+                        class="list-group-item list-group-item-action list-group-item-light"
+                        >List des offres</a
+                    >
+                    <a
+                        href="#"
+                        class="list-group-item list-group-item-action list-group-item-danger  "
+                        >quitter l'espace d'admin</a
+                    >
                 </div>
+                
 
             </div>
         </div>

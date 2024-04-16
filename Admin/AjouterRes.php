@@ -1,17 +1,8 @@
 <?php
 require("../connexiondb.php");
-if (isset($_POST['done'])) {
-    extract($_POST);
-    $sql = $db->prepare("SELECT * FROM Admin WHERE Email = ? AND Pass = ?");
-    $sql->execute([$Email, $Pass]);
-    $user = $sql->fetch();
-    if (!empty($user)) {
-        session_start();
-        $_SESSION["Data"] = $user;
-        header("location:AjouterRes.php");
-    } else {
-        $error = "";
-    }
+session_start();
+if (!isset($_SESSION["Data"])) {
+    header("location:login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -180,15 +171,21 @@ if (isset($_POST['done'])) {
 <body class="">
     <nav class="w-100 d-flex justify-content-between align-items-center bg-danger" style="padding: 5px 0;">
         <a href="https://www.eat.ma/" class="link-dark px-2 fs-4">
-            <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" width="150px" alt="">
+            <img src="https://www.eat.ma/wp-content/uploads/eat-ma-logo-e1593253424129.png" alt="" width="150px">
         </a>
+
+
     </nav>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-6 d-flex flex-column justify-content-center align-items-center bg-light" style="height: 100vh;">
-                <img src="https://www.eat.ma/wp-content/uploads/eat-logo-red-small.png" width="300px" alt="" class="py-3">
-                <p class="text-dark fs-6 text-center">Bonjour dans votre espace d'admin ,commence d'jaouter des restaurants .
+            <img src="https://www.eat.ma/wp-content/uploads/eat-logo-red-small.png" width="300px" alt="" class="py-3">
+                <p class="text-dark fs-6">Bonjour dans votre espace d'admin ,commence d'jaouter des restaurants .
+                    <form action="traitement.php" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm" name="exit">quitter l'espace d'admin</button>
+                    </form>
+                </p>
             </div>
             <div class="col-sm-12 col-md-6 form-body d-flex justify-content-center align-items-center m-auto " style="height: 100vh;">
 
@@ -197,22 +194,38 @@ if (isset($_POST['done'])) {
                     <div class="form-holder ">
                         <div class="form-content m-auto">
                             <div class="form-items ">
-                                <h3 class="my-3">Login</h3>
+                                <h3 class="">Ajouter un restaurant</h3>
                                 <p class="">
                                     Remplissez les données ci-dessous.</p>
-                                <?php
-                                if (isset($error)) {
-                                ?><p class="alert alert-danger ">incorrect email or password</p><?php } ?>
-                                <form action="#" method="post" class="requires-validation " enctype="multipart/form-data">
+                                <form action="traitement.php" method="post" enctype="multipart/form-data">
                                     <div class="col-md-12">
-                                        <input class="form-control my-3" type="email" name="Email" placeholder="Email" required>
+                                        <input class="form-control" type="text" name="Nom" placeholder="Nom de restaurant" required>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <input class="form-control my-3" type="password" name="Pass" placeholder="Mot de pass" required>
+                                        <input class="form-control" type="text" name="Ville" placeholder="Ville" required>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input class="form-control" type="text" name="Cartier" placeholder="Cartier" required>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input class="form-control" type="text" name="Specialites" placeholder="Specialites" required>
+                                    </div>
+
+                                    <div class="col-md-12 my-3">
+                                        <label for="" class="text-dark">Photo de restaurant:</label>
+                                        <input class="form-control" type="file" accept="image/*" name="Photo" required>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <input class="form-control my-3" type="text" name="Latitude" placeholder="Latitude" required>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <input class="form-control" type="text" name="Longitude" placeholder="Longitude" required>
                                     </div>
                                     <div class="form-button mt-3">
-                                        <button id="submit" type="submit" class="btn btn-danger" name="done">Login</button>
+                                        <button id="submit" type="submit" class="btn btn-danger " name="done">Ajouter</button>
                                     </div>
                                 </form>
                             </div>
