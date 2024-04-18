@@ -114,7 +114,7 @@ if (isset($_GET['id'])) {
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                 <form action="" method="post">
-                  <input type="submit" name="supprimer" class="btn btn-primary" value="supprimer">
+                  <input type="submit" name="supprimer" class="btn btn-danger" value="supprimer">
                 </form>
               </div>
             </div>

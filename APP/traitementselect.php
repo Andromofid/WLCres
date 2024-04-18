@@ -4,9 +4,14 @@ require("../connexiondb.php");
 if(isset($_POST['Specialite'])) {
     // Retrieve the value of Specialite
     extract($_POST);
-    $sql=$db->prepare("SELECT Cartier FROM restaurant WHERE Ville=? AND Specialites LIKE'%$Specialite%'");
-    $sql->execute([$Ville]);
-    $Cartiers = $sql->fetchAll();
+    if($Specialite == ""){
+        $Cartiers = [];
+    }else{
+        $sql=$db->prepare("SELECT Cartier FROM restaurant WHERE Ville=? AND Specialites LIKE'%$Specialite%'");
+        $sql->execute([$Ville]);
+        $Cartiers = $sql->fetchAll();
+    }
+    
     print_r(json_encode($Cartiers));
 
 } else {
